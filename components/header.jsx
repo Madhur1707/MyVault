@@ -6,13 +6,13 @@ import { LayoutDashboard, PenBox } from "lucide-react";
 
 const Header = () => {
   return (
-    <div className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b ">
+    <div className="fixed top-0 w-full backdrop-blur-md bg-white/80 border-b z-50 shadow-md">
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/">
           <Image
-            src={"/file.svg"}
+            src={"/logo.png"}
             width={200}
-            height={60}
+            height={100}
             alt="MyVault"
             className="h-12 w-auto object-contain"
           />
@@ -46,7 +46,13 @@ const Header = () => {
             </SignInButton>
           </SignedOut>
           <SignedIn>
-            <UserButton />
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "w-10 h-10",
+                },
+              }}
+            />
           </SignedIn>
         </div>
       </nav>
