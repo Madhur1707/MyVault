@@ -21,6 +21,7 @@ import {
 } from "./ui/select";
 import { Switch } from "./ui/switch";
 import { Button } from "./ui/button";
+import { UserCircle2 } from "lucide-react";
 
 const CreateAccountDrawer = ({ children }) => {
   const [open, setOpen] = useState(false);
@@ -46,89 +47,101 @@ const CreateAccountDrawer = ({ children }) => {
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Create New Account </DrawerTitle>
-        </DrawerHeader>
-        <div className="px-4 pb-4">
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium">
-                Account Name
-              </label>
-              <Input
-                id="name"
-                placeholder="e.g., Main Checking"
-                {...register("name")}
-              />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name.message}</p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="type" className="text-sm font-medium">
-                Account Type
-              </label>
-              <Select
-                onValueChange={(value) => setValue("type", value)}
-                defaultValue={watch("type")}
-              >
-                <SelectTrigger id="type">
-                  <SelectValue placeholder="Select Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="CURRENT">Current</SelectItem>
-                  <SelectItem value="SAVINGS">Savings</SelectItem>
-                </SelectContent>
-              </Select>
-              {errors.type && (
-                <p className="text-sm text-red-500">{errors.type.message}</p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="balance" className="text-sm font-medium">
-                Initial Balance
-              </label>
-              <Input
-                id="balance"
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                {...register("balance")}
-              />
-              {errors.balance && (
-                <p className="text-sm text-red-500">{errors.balance.message}</p>
-              )}
-            </div>
+        <div className=" bg-slate-50">
+          <div className="flex flex-col">
+            <DrawerHeader>
+              <DrawerTitle className="flex items-center space-x-2 text-[#3F51B5]">
+                <UserCircle2 className="h-12" />
+                <span>Create New Account</span>
+              </DrawerTitle>
+            </DrawerHeader>
+          </div>
 
-            <div className="flex items-center justify-between rounded-lg border p-3">
-              <div className="space-y-0.5">
-                <label
-                  htmlFor="isDefault"
-                  className="text-sm  text-blue-600 font-semibold cursor-pointer"
-                >
-                  Set as Default
+          <div className="px-4 pb-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div className="space-y-2">
+                <label htmlFor="name" className="text-sm font-medium">
+                  Account Name
                 </label>
-                <p className="text-sm text-muted-foreground">
-                  This account will be selected by default for transactions
-                </p>
+                <Input
+                  id="name"
+                  placeholder="e.g., Main Checking"
+                  {...register("name")}
+                  className="bg-white"
+                />
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name.message}</p>
+                )}
               </div>
-              <Switch
-                id="isDefault"
-                onCheckChange={(checked) => setValue("isDefault", checked)}
-                checked={watch("isDefault")}
-              />
-            </div>
-            <div>
-              <DrawerClose asChild>
-                <Button type="button" variant="outline" className="flex-1">
-                  Close
+              <div className="space-y-2">
+                <label htmlFor="type" className="text-sm font-medium">
+                  Account Type
+                </label>
+                <Select
+                  onValueChange={(value) => setValue("type", value)}
+                  defaultValue={watch("type")}
+                >
+                  <SelectTrigger id="type" className="bg-white">
+                    <SelectValue placeholder="Select Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="CURRENT">Current</SelectItem>
+                    <SelectItem value="SAVINGS">Savings</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.type && (
+                  <p className="text-sm text-red-500">{errors.type.message}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="balance" className="text-sm font-medium">
+                  Initial Balance
+                </label>
+                <Input
+                  id="balance"
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  {...register("balance")}
+                  className="bg-white"
+                />
+                {errors.balance && (
+                  <p className="text-sm text-red-500">
+                    {errors.balance.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between rounded-lg border p-3 bg-white">
+                <div className="space-y-0.5">
+                  <label
+                    htmlFor="isDefault"
+                    className="text-sm text-[#4CAF50] font-semibold cursor-pointer"
+                  >
+                    Set as Default
+                  </label>
+                  <p className="text-sm text-muted-foreground">
+                    This account will be selected by default for Transactions...
+                  </p>
+                </div>
+                <Switch
+                  id="isDefault"
+                  onCheckChange={(checked) => setValue("isDefault", checked)}
+                  checked={watch("isDefault")}
+                />
+              </div>
+              <div>
+                <DrawerClose asChild>
+                  <Button type="button" variant="outline" className="flex-1">
+                    Close
+                  </Button>
+                </DrawerClose>
+                <Button type="submit" className="flex-1 ml-3">
+                  Create Account
                 </Button>
-              </DrawerClose>
-              <Button type="submit" className="flex-1 ml-3">
-                Create Account
-              </Button>
-            </div>
-          </form>
+              </div>
+            </form>
+          </div>
         </div>
       </DrawerContent>
     </Drawer>
