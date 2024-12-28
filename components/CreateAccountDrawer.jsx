@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Drawer,
   DrawerClose,
@@ -21,7 +21,10 @@ import {
 } from "./ui/select";
 import { Switch } from "./ui/switch";
 import { Button } from "./ui/button";
-import { UserCircle2 } from "lucide-react";
+import { Loader, UserCircle2 } from "lucide-react";
+import useFetch from "@/hooks/use-fetch";
+import { createAccount } from "@/action/dashboard";
+import { toast } from "sonner";
 
 const CreateAccountDrawer = ({ children }) => {
   const [open, setOpen] = useState(false);
@@ -43,6 +46,31 @@ const CreateAccountDrawer = ({ children }) => {
     },
   });
 
+  const {
+    data: newAccount,
+    error,
+    fn: createAccounFn,
+    loading: createAccountLoading,
+  } = useFetch(createAccount);
+
+  useEffect(() => {
+    if (newAccount && !createAccountLoading) {
+      toast.success("Account created successfully");
+      reset();
+      setOpen(false);
+    }
+  }, [createAccountLoading, newAccount]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message || "Failed to create account");
+    }
+  }, [error]);
+
+  const onSubmit = async (data) => {
+    await createAccounFn(data);
+  };
+
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
@@ -58,7 +86,7 @@ const CreateAccountDrawer = ({ children }) => {
           </div>
 
           <div className="px-4 pb-4">
-            <form className="space-y-4" onSubmit={handleSubmit}>
+            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-2">
                 <label htmlFor="name" className="text-sm font-medium">
                   Account Name
@@ -126,18 +154,29 @@ const CreateAccountDrawer = ({ children }) => {
                 </div>
                 <Switch
                   id="isDefault"
-                  onCheckChange={(checked) => setValue("isDefault", checked)}
+                  onCheckedChange={(checked) => setValue("isDefault", checked)}
                   checked={watch("isDefault")}
                 />
               </div>
-              <div>
+              <div className="flex gap-4 pt-4">
                 <DrawerClose asChild>
                   <Button type="button" variant="outline" className="flex-1">
-                    Close
+                    Cancle
                   </Button>
                 </DrawerClose>
-                <Button type="submit" className="flex-1 ml-3">
-                  Create Account
+                <Button
+                  type="submit"
+                  className="flex-1 "
+                  disabled={createAccountLoading}
+                >
+                  {createAccountLoading ? (
+                    <>
+                      <Loader className="mr-2 h-4 w-4 animate-spin" />{" "}
+                      Creating...
+                    </>
+                  ) : (
+                    "Create Account"
+                  )}
                 </Button>
               </div>
             </form>
