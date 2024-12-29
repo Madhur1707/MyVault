@@ -48,18 +48,20 @@ const AccountCard = ({ account }) => {
   }, [error]);
 
   return (
-    <Card className="group relative rounded-lg overflow-hidden border border-gray-200  hover:shadow-md ">
+    <Card className="group relative rounded-lg overflow-hidden border border-gray-200  hover:shadow-md  ">
       <Link href={`account/${id}`}>
-        <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-indigo-500 via-purple-500 to-gray-500 p-4 text-white">
-          <CardTitle className="text-lg font-semibold capitalize">
+        <CardHeader className="flex flex-row items-center justify-between bg-gray-50 border-b border-gray-200 p-4 rounded-lg shadow-sm">
+          <CardTitle className="text-xl font-medium text-gray-800 capitalize">
             {name}
           </CardTitle>
           <Switch
             checked={isDefault}
             onClick={handleDefaultChange}
             disabled={updateDefaultLoading}
+            className="bg-gray-300 focus:ring focus:ring-indigo-500 transition-all duration-200 rounded-full"
           />
         </CardHeader>
+
         <CardContent className="p-4 bg-white">
           <div className="text-2xl font-semibold text-gray-900">
             ₹ {parseFloat(balance).toFixed(2)}

@@ -1,11 +1,13 @@
 import { Suspense } from "react";
 import DashboardPage from "./page";
 import { ClipLoader } from "react-spinners";
+import { WalletMinimal } from "lucide-react";
 
 const DashboardLayout = () => {
   return (
     <div className="px-5">
-      <h1 className="text-4xl md:text-6xl lg:text-[75px] pb-6 bg-gradient-to-r from-black via-gray-800 to-purple-900 text-transparent bg-clip-text font-semibold tracking-tight leading-tight ml-3">
+      <h1 className="flex items-center text-4xl md:text-5xl lg:text-6xl pb-6 text-gray-800 font-semibold tracking-tight leading-snug ml-5">
+        <WalletMinimal className="h-12 w-12 font-bold text-gray-800 mr-3" />
         Dashboard
       </h1>
 

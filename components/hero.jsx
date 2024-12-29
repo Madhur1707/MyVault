@@ -7,14 +7,13 @@ const HeroSection = () => {
   return (
     <div className="pb-20 px-4">
       <div className="container mx-auto  text-center">
-        <h1 className="text-5xl md:text-8xl lg:text-[105px] pb-6 bg-gradient-to-r from-black via-gray-800 to-purple-900 text-transparent bg-clip-text font-semibold tracking-tight leading-tight">
+        <h1 className="text-5xl md:text-8xl lg:text-[105px] pb-6 bg-gradient-to-r from-black via-teal-500 to-purple-900 text-transparent bg-clip-text font-semibold tracking-tight leading-tight">
           Manage Your Finances <br /> with Intelligence
         </h1>
 
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-serif">
-          Empower yourself to manage your finances effortlessly with innovative
-          tools, insightful guidance, and intelligent solutions tailored to meet
-          your unique needs and goals.
+          Take control of your finances with smart tool, expert guidance, and
+          personalized solutions tailored to your unique goals.
         </p>
         <div className="flex justify-center space-x-4">
           <Link href={"/dashboard"}>
