@@ -1,4 +1,5 @@
 "use client";
+import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
@@ -9,15 +10,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { categoryColors, defaultCategories } from "@/data/categories";
 import { format } from "date-fns";
+import { Clock, RefreshCw } from "lucide-react";
 import React from "react";
 
+const RECURRING_INTERVALS = {
+  DAILY: "Daily",
+  WEEKLY: "Weekly",
+  MONTHLY: "Monthly",
+  YEARLY: "Yearly",
+};
+
 const TransactionTable = ({ transactions }) => {
-    console.log(transactions)
   const filteredAndSortedTransactions = transactions;
-  
-
-
 
   const handleSort = () => {};
 
@@ -80,6 +92,79 @@ const TransactionTable = ({ transactions }) => {
                     {format(new Date(transaction.date), "PP")}
                   </TableCell>
                   <TableCell>{transaction.description}</TableCell>
+                  <TableCell className="capitalize flex items-center">
+                    <span
+                      style={{
+                        background: categoryColors[transaction.category],
+                      }}
+                      className="px-2 py-1 rounded text-white flex items-center"
+                    >
+                      {defaultCategories
+                        .filter(
+                          (category) => category.id === transaction.category
+                        )
+                        .map((category) => (
+                          <React.Fragment key={category.id}>
+                            <span className="h-4 w-4 mr-1 flex items-center justify-center">
+                              {React.cloneElement(category.icon, {
+                                size: 16,
+                              })}
+                            </span>
+                            <span className="ml-2">{category.name}</span>
+                          </React.Fragment>
+                        ))}
+                    </span>
+                  </TableCell>
+
+                  <TableCell
+                    className="text-right font-medium"
+                    style={{
+                      color: transaction.type === "EXPENSE" ? "red" : "green",
+                    }}
+                  >
+                    {transaction.type === "EXPENSE" ? "-" : "+"} ₹
+                    {transaction.amount.toFixed(2)}
+                  </TableCell>
+                  <TableCell>
+                    {transaction.isRecurring ? (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            {" "}
+                            <Badge
+                              variant="outline"
+                              className="gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200"
+                            >
+                              {" "}
+                              <RefreshCw className="h-3 w-3" />
+                              {
+                                RECURRING_INTERVALS[
+                                  transaction.recurringInterval
+                                ]
+                              }
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <div className="text-sm">
+                              <div className="font-medium">Next Date:</div>{" "}
+                              <div>
+                                {format(
+                                  new Date(transaction.nextRecurringDate),
+                                  "PP"
+                                )}
+                              </div>
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : (
+                      <Badge variant="outline" className="gap-1">
+                        {" "}
+                        <Clock className="h-3 w-3" />
+                        One-Time
+                      </Badge>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))
             )}
