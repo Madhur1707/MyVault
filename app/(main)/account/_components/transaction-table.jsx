@@ -1,6 +1,15 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -18,7 +27,8 @@ import {
 } from "@/components/ui/tooltip";
 import { categoryColors, defaultCategories } from "@/data/categories";
 import { format } from "date-fns";
-import { Clock, RefreshCw } from "lucide-react";
+import { Clock, MoreHorizontal, RefreshCw } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const RECURRING_INTERVALS = {
@@ -29,6 +39,8 @@ const RECURRING_INTERVALS = {
 };
 
 const TransactionTable = ({ transactions }) => {
+  const router = useRouter();
+
   const filteredAndSortedTransactions = transactions;
 
   const handleSort = () => {};
@@ -164,6 +176,35 @@ const TransactionTable = ({ transactions }) => {
                         One-Time
                       </Badge>
                     )}
+                  </TableCell>
+
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <Button variant="ghost" className="w-8 h-8 p-0">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            router.push(
+                              `/transaction/create?edit=${transaction.id}`
+                            )
+                          }
+                          className="cursor-pointer"
+                        >
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="text-destructive cursor-pointer"
+                          onClick={() => deleteFn([transaction.id])}
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))
