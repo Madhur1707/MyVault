@@ -1,4 +1,5 @@
 "use client";
+import { bulkDeleteTransactions } from "@/action/accounts";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -33,6 +34,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { categoryColors, defaultCategories } from "@/data/categories";
+import useFetch from "@/hooks/use-fetch";
 import { format } from "date-fns";
 import {
   ChevronDown,
@@ -45,7 +47,9 @@ import {
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { ClipLoader } from "react-spinners";
+import { toast } from "sonner";
 
 const RECURRING_INTERVALS = {
   DAILY: "Daily",
@@ -65,6 +69,12 @@ const TransactionTable = ({ transactions }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [recurringFilter, setrecurringFilter] = useState("");
+
+  const {
+    loading: deleteLoading,
+    fn: deleteFn,
+    data: deleted,
+  } = useFetch(bulkDeleteTransactions);
 
   const filteredAndSortedTransactions = useMemo(() => {
     let result = [...transactions];
@@ -91,6 +101,28 @@ const TransactionTable = ({ transactions }) => {
     if (typeFilter) {
       result = result.filter((transaction) => transaction.type === typeFilter);
     }
+
+    // Apply Sorting
+
+    result.sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortConfig.field) {
+        case "date":
+          comparison = new Date(a.date) - new Date(b.date);
+          break;
+        case "amount":
+          comparison = a.amount - b.amount;
+          break;
+        case "category":
+          comparison = a.category.localeCompare(b.category);
+          break;
+
+        default:
+          comparison = 0;
+      }
+      return sortConfig.direction === "asc" ? comparison : -comparison;
+    });
 
     return result;
   }, [transactions, searchTerm, typeFilter, recurringFilter, sortConfig]);
@@ -121,7 +153,22 @@ const TransactionTable = ({ transactions }) => {
     );
   };
 
-  const handleBulkDelete = () => {};
+  const handleBulkDelete = async () => {
+    if (
+      !window.confirm(
+        `Are you sure you want to delete ${selectedIds.length} transactions?`
+      )
+    ) {
+      return;
+    }
+    deleteFn(selectedIds);
+  };
+
+  useEffect(() => {
+    if (deleted && !deleteLoading) {
+      toast.success("Transactions deleted successfully!");
+    }
+  }, [deleteFn, deleteLoading]);
 
   const handleClearFilters = () => {
     setSearchTerm("");
@@ -132,6 +179,16 @@ const TransactionTable = ({ transactions }) => {
 
   return (
     <div className="space-y-4">
+      <div className="flex justify-center items-center">
+        {deleteLoading && (
+          <ClipLoader
+            color="#12CAD6"
+            size={50}
+            cssOverride={{ borderWidth: "6px", marginTop: "4px" }}
+          />
+        )}
+      </div>
+
       {/* Filters  */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
@@ -204,7 +261,7 @@ const TransactionTable = ({ transactions }) => {
                   onCheckedChange={handleSelectAll}
                   checked={
                     selectedIds.length ===
-                      filteredAndSortedTransactions.length &&
+                    filteredAndSortedTransactions.length &&
                     filteredAndSortedTransactions.length > 0
                   }
                 />{" "}
@@ -328,7 +385,7 @@ const TransactionTable = ({ transactions }) => {
                               <RefreshCw className="h-3 w-3" />
                               {
                                 RECURRING_INTERVALS[
-                                  transaction.recurringInterval
+                                transaction.recurringInterval
                                 ]
                               }
                             </Badge>
