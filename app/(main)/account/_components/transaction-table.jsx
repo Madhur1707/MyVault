@@ -168,7 +168,7 @@ const TransactionTable = ({ transactions }) => {
     if (deleted && !deleteLoading) {
       toast.success("Transactions deleted successfully!");
     }
-  }, [deleteFn, deleteLoading]);
+  }, [deleted, deleteLoading]);
 
   const handleClearFilters = () => {
     setSearchTerm("");
@@ -261,7 +261,7 @@ const TransactionTable = ({ transactions }) => {
                   onCheckedChange={handleSelectAll}
                   checked={
                     selectedIds.length ===
-                    filteredAndSortedTransactions.length &&
+                      filteredAndSortedTransactions.length &&
                     filteredAndSortedTransactions.length > 0
                   }
                 />{" "}
@@ -385,7 +385,7 @@ const TransactionTable = ({ transactions }) => {
                               <RefreshCw className="h-3 w-3" />
                               {
                                 RECURRING_INTERVALS[
-                                transaction.recurringInterval
+                                  transaction.recurringInterval
                                 ]
                               }
                             </Badge>
