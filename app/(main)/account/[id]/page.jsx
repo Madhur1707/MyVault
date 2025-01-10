@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ClipLoader } from "react-spinners";
 import TransactionTable from "../_components/transaction-table";
+import AccountChart from "../_components/account-chart";
 
 
 const AccountPage = async ({ params }) => {
@@ -37,7 +38,20 @@ const AccountPage = async ({ params }) => {
       </div>
 
       {/* Chart Section  */}
-
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center">
+            <ClipLoader
+              color="#12CAD6"
+              size={50}
+              cssOverride={{ borderWidth: "6px", marginTop: "4px" }}
+            />
+          </div>
+        }
+      >
+        
+        <AccountChart transactions={transactions} />
+      </Suspense>
       {/* Transaction Table  */}
 
 
