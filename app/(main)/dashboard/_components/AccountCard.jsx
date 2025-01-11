@@ -10,7 +10,11 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import useFetch from "@/hooks/use-fetch";
-import { ArrowDown, ArrowUp, Loader } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Loader2Icon,
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -94,8 +98,8 @@ const AccountCard = ({ account }) => {
           >
             {isNavigating ? (
               <>
-                <Loader className="h-4 w-4 animate-spin" />
                 <span>Loading...</span>
+                <Loader2Icon className="h-4 w-4 animate-spin" />
               </>
             ) : (
               "See Transactions"

@@ -1,4 +1,12 @@
 "use client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { endOfDay, format, startOfDay, subDays } from "date-fns";
 import React, { useMemo, useState } from "react";
 // import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from "recharts";
@@ -49,11 +57,39 @@ const AccountChart = ({ transactions }) => {
     return Object.values(grouped).sort((a, b) => new Date(a.date) - b.date);
   }, [transactions, dateRange]);
 
-  console.log(filteredData);
+  const totals = useMemo(() => {
+    return filteredData.reduce(
+      (acc, day) => ({
+        income: acc.income + day.income,
+        expense: acc.expense + day.expense,
+      }),
+      { income: 0, expense: 0 }
+    );
+  }, [filteredData]);
 
   return (
-    <div>
-      {/* <ResponsiveContainer width="100%" height="100%">
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
+        <CardTitle className="text-base font-normal">
+          Transaction Overview
+        </CardTitle>
+        <Select defaultValue={dateRange} onValueChange={setDateRange}>
+          <SelectTrigger className="w-[140px]">
+            <SelectValue placeholder="Select range" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(DATE_RANGES).map(([key, { label }]) => {
+              return (
+                <SelectItem key={key} value={key}>
+                  {label}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+      </CardHeader>
+      <CardContent>
+        {/* <ResponsiveContainer width="100%" height="100%">
         <BarChart
           width={500}
           height={300}
@@ -82,7 +118,8 @@ const AccountChart = ({ transactions }) => {
           />
         </BarChart>
       </ResponsiveContainer> */}
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

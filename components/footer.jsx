@@ -2,7 +2,7 @@ import { Github, Linkedin, User2, X } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="text-black bg-slate-200 py-6">
+    <footer className="text-black bg-gray-100 py-6 mt-3">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 mt-3 gap-6">
           <div className="flex flex-col items-center md:items-start">
@@ -81,7 +81,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-5 flex items-center justify-center text-center text-gray-500">
-          © 2024 MyVault | All rights reserved.
+          © 2025 MyVault | All rights reserved.
         </div>
       </div>
     </footer>
