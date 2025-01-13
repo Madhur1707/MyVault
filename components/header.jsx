@@ -11,13 +11,17 @@ const Header = async () => {
     <div className="fixed top-0 w-full backdrop-blur-md bg-white/80 border-b z-50 shadow-md">
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/">
-          <Image
+          <h1 className="text-3xl font-bold">
+            <span className="text-[#00AEEF]">MY</span>
+            <span className="text-[#24324D]">VAULT</span>
+          </h1>
+          {/* <Image
             src="/Logo.png"
             width={200}
             height={100}
             alt="MyVault"
             className="h-12 w-auto object-contain"
-          />
+          /> */}
         </Link>
         <div className="flex items-center space-x-4">
           <SignedIn>
