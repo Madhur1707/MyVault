@@ -11,12 +11,15 @@ export async function getCurrentBudget(accountId) {
     const user = await db.user.findUnique({
       where: { clerkUserId: userId },
     });
+
     if (!user) {
       throw new Error("User not found");
     }
 
     const budget = await db.budget.findFirst({
-      where: { userId: user.id },
+      where: {
+        userId: user.id,
+      },
     });
 
     const currentDate = new Date();
@@ -25,7 +28,6 @@ export async function getCurrentBudget(accountId) {
       currentDate.getMonth(),
       1
     );
-
     const endOfMonth = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth() + 1,
@@ -49,10 +51,12 @@ export async function getCurrentBudget(accountId) {
 
     return {
       budget: budget ? { ...budget, amount: budget.amount.toNumber() } : null,
-      currentExpenses: expenses._sum.amount ? expenses._sum.toNumber() : 0,
+      currentExpenses: expenses._sum.amount
+        ? expenses._sum.amount.toNumber()
+        : 0,
     };
   } catch (error) {
-    console.error("Error Fetching Budget:", error);
+    console.error("Error fetching budget:", error);
     throw error;
   }
 }
@@ -65,10 +69,10 @@ export async function updateBudget(amount) {
     const user = await db.user.findUnique({
       where: { clerkUserId: userId },
     });
-    if (!user) {
-      throw new Error("User not found");
-    }
 
+    if (!user) throw new Error("User not found");
+
+    // Update or create budget
     const budget = await db.budget.upsert({
       where: {
         userId: user.id,
@@ -88,7 +92,7 @@ export async function updateBudget(amount) {
       data: { ...budget, amount: budget.amount.toNumber() },
     };
   } catch (error) {
-    console.error("Error updating budget :", error);
+    console.error("Error updating budget:", error);
     return { success: false, error: error.message };
   }
 }

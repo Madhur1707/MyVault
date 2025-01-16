@@ -9,7 +9,7 @@ import BudgetProgress from "./_components/BudgetProgress";
 const DashboardPage = async () => {
   const accounts = await getUserAccounts();
 
-  const defaultAccount = accounts.find((account) => account.isDefault);
+  const defaultAccount = accounts?.find((account) => account.isDefault);
 
   let budgetData = null;
   if (defaultAccount) {
@@ -17,9 +17,8 @@ const DashboardPage = async () => {
   }
 
   return (
-    <div className="px-5">
+    <div className="px-5 mb-0">
       {/* Budget Progress */}
-
       {defaultAccount && (
         <BudgetProgress
           initialBudget={budgetData?.budget}
