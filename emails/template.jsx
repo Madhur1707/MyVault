@@ -10,10 +10,10 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-export default function Email({
-  username = "Madhur Pathak",
+export default function EmailTemplate({
+  username = "",
   type = "budget-alert",
-  data = {percentageUsed: 80, budgetAmount: 1000, totalExpenses: 800},
+  data = {},
 }) {
   if (type === "monthly-report") {
   }
@@ -34,16 +34,16 @@ export default function Email({
               <Section style={styles.statsContainer}>
                 <div style={styles.stat}>
                   <Text style={styles.text}>Budget Amount</Text>
-                  <Text style={styles.heading}>${data?.budgetAmount}</Text>
+                  <Text style={styles.heading}>₹{data?.budgetAmount}</Text>
                 </div>
                 <div style={styles.stat}>
                   <Text style={styles.text}>Spent So Far</Text>
-                  <Text style={styles.heading}>${data?.totalExpenses}</Text>
+                  <Text style={styles.heading}>₹{data?.totalExpenses}</Text>
                 </div>
                 <div style={styles.stat}>
                   <Text style={styles.text}>Remaining</Text>
                   <Text style={styles.heading}>
-                    ${data?.budgetAmount - data?.totalExpenses}
+                    ₹{data?.budgetAmount - data?.totalExpenses}
                   </Text>
                 </div>
               </Section>
@@ -56,43 +56,43 @@ export default function Email({
 }
 
 const styles = {
-    body: {
-      backgroundColor: "#f4f4f4",
-      fontFamily: "Arial, sans-serif",
-    },
-    container: {
-      backgroundColor: "#ffffff",
-      margin: "0 auto",
-      padding: "20px",
-      borderRadius: "5px",
-      boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-    },
-    title: {
-      color: "#1f2937",
-      fontSize: "32px",
-      fontWeight: "bold",
-      textAlign: "center",
-      margin: "0 0 20px",
-    },
-    text: {
-      color: "#333333",
-      fontSize: "16px",
-      lineHeight: "1.5",
-      margin: "0 0 10px",
-    },
-    statsContainer: {
-      display: "flex",
-      justifyContent: "space-between",
-      marginTop: "20px",
-    },
-    stat: {
-      flex: "1",
-      textAlign: "center",
-    },
-    heading: {
-      color: "#1f2937",
-      fontSize: "24px",
-      fontWeight: "bold",
-      margin: "10px 0",
-    },
-  };
+  body: {
+    backgroundColor: "#f4f4f4",
+    fontFamily: "Arial, sans-serif",
+  },
+  container: {
+    backgroundColor: "#ffffff",
+    margin: "0 auto",
+    padding: "20px",
+    borderRadius: "5px",
+    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+  },
+  title: {
+    color: "#1f2937",
+    fontSize: "32px",
+    fontWeight: "bold",
+    textAlign: "center",
+    margin: "0 0 20px",
+  },
+  text: {
+    color: "#333333",
+    fontSize: "16px",
+    lineHeight: "1.5",
+    margin: "0 0 10px",
+  },
+  statsContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "20px",
+  },
+  stat: {
+    flex: "1",
+    textAlign: "center",
+  },
+  heading: {
+    color: "#1f2937",
+    fontSize: "24px",
+    fontWeight: "bold",
+    margin: "10px 0",
+  },
+};
