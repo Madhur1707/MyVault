@@ -46,6 +46,9 @@ const AddTrasactionForm = ({ accounts, categories }) => {
   const isRecurring = watch("isRecurring");
   const date = watch("date");
 
+  const filteredCategories = categories.filter(
+    (category) => category.type === type
+  );
   return (
     <form className="space-y-6">
       {/* AI Reciept Scanner  */}
@@ -100,15 +103,43 @@ const AddTrasactionForm = ({ accounts, categories }) => {
               ))}
 
               <CreateAccountDrawer>
-                <Button variant="ghost" className="w-full select-none items-center text-sm outline-none">Create Account</Button>
+                <Button
+                  variant="ghost"
+                  className="w-full select-none items-center text-sm outline-none"
+                >
+                  Create Account
+                </Button>
               </CreateAccountDrawer>
             </SelectContent>
           </Select>
 
-          {errors.type && (
+          {errors.accountId && (
             <p className="text-sm text-red-500"> {errors.type.message}</p>
           )}
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Category</label>
+        <Select
+          onValueChange={(value) => setValue("category", value)}
+          defaultValue={getValues("category")}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select category" />
+          </SelectTrigger>
+          <SelectContent>
+            {filteredCategories.map((category) => (
+              <SelectItem key={category.id} value={category.id}>
+                {category.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {errors.category && (
+          <p className="text-sm text-red-500"> {errors.type.message}</p>
+        )}
       </div>
     </form>
   );
