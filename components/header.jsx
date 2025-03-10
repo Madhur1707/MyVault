@@ -1,12 +1,22 @@
+"use client";
+
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { LayoutDashboard, PenBox } from "lucide-react";
-import { checkUser } from "@/lib/checkUser";
+import { LayoutDashboard, PenBox, Loader2 } from "lucide-react";
+import { useState } from "react";
 
-const Header = async () => {
-  await checkUser();
+const Header = () => {
+  const [loading, setLoading] = useState({
+    dashboard: false,
+    transaction: false,
+  });
+
+  const handleNavigation = (type, href) => {
+    setLoading((prev) => ({ ...prev, [type]: true }));
+    window.location.href = href;
+  };
+
   return (
     <div className="fixed top-0 w-full backdrop-blur-md bg-white/80 border-b z-50 shadow-md">
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -15,35 +25,38 @@ const Header = async () => {
             <span className="text-[#00AEEF]">MY</span>
             <span className="text-[#24324D]">VAULT</span>
           </h1>
-          {/* <Image
-            src="/Logo.png"
-            width={200}
-            height={100}
-            alt="MyVault"
-            className="h-12 w-auto object-contain"
-          /> */}
         </Link>
         <div className="flex items-center space-x-4">
           <SignedIn>
-            <Link
-              href={"/dashboard"}
-              className="text-gray-600 hover:text-blue-600 flex items-center gap-2"
+            <Button
+              variant="default"
+              disabled={loading.dashboard}
+              onClick={() => handleNavigation("dashboard", "/dashboard")}
+              className="flex items-center gap-2"
             >
-              <Button variant="default">
+              {loading.dashboard ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
                 <LayoutDashboard size={18} />
-                <span className="hidden md:inline">Dashboard</span>
-              </Button>
-            </Link>
+              )}
+              <span className="hidden md:inline">Dashboard</span>
+            </Button>
 
-            <Link
-              href={"/transaction/create"}
-              className="text-gray-600 hover:text-blue-600 flex items-center gap-2"
+            <Button
+              variant="outline"
+              disabled={loading.transaction}
+              onClick={() =>
+                handleNavigation("transaction", "/transaction/create")
+              }
+              className="flex items-center gap-2"
             >
-              <Button variant="outline" className="flex items-center gap-2">
+              {loading.transaction ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
                 <PenBox size={18} />
-                <span className="hidden md:inline">Add Transaction</span>
-              </Button>
-            </Link>
+              )}
+              <span className="hidden md:inline">Add Transaction</span>
+            </Button>
           </SignedIn>
 
           <SignedOut>
@@ -51,6 +64,7 @@ const Header = async () => {
               <Button variant="default">Login</Button>
             </SignInButton>
           </SignedOut>
+
           <SignedIn>
             <UserButton
               appearance={{

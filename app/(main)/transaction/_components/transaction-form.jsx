@@ -3,7 +3,13 @@ import { createTransaction } from "@/action/transaction";
 import { transactionSchema } from "@/app/lib/schema";
 import CreateAccountDrawer from "@/components/CreateAccountDrawer";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -11,11 +17,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import useFetch from "@/hooks/use-fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon, Loader2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const AddTrasactionForm = ({ accounts, categories }) => {
+  const router = useRouter();
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const {
     register,
     setValue,
@@ -46,11 +62,29 @@ const AddTrasactionForm = ({ accounts, categories }) => {
   const isRecurring = watch("isRecurring");
   const date = watch("date");
 
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    const formData = {
+      ...data,
+      amount: parseFloat(data.amount),
+    };
+    await transactionFn(formData);
+    setIsSubmitting(false);
+  };
+
+  useEffect(() => {
+    if (transactionResult?.success && !transactionLoading) {
+      toast.success("Transaction created successfully");
+      reset();
+      router.push(`/account/${transactionResult.data.accountId}`);
+    }
+  }, [transactionResult, transactionLoading]);
+
   const filteredCategories = categories.filter(
     (category) => category.type === type
   );
   return (
-    <form className="space-y-6">
+    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       {/* AI Reciept Scanner  */}
       <div className="space-y-2">
         <label className="text-sm font-medium"> Type</label>
@@ -82,7 +116,7 @@ const AddTrasactionForm = ({ accounts, categories }) => {
             {...register("amount")}
           />
           {errors.amount && (
-            <p className="text-sm text-red-500"> {errors.type.message}</p>
+            <p className="text-sm text-red-500"> {errors.amount.message}</p>
           )}
         </div>
 
@@ -140,6 +174,125 @@ const AddTrasactionForm = ({ accounts, categories }) => {
         {errors.category && (
           <p className="text-sm text-red-500"> {errors.type.message}</p>
         )}
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Date</label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="w-full pl-3 text-left font-normal"
+            >
+              {date ? format(date, "PPP") : <span>Pick a date</span>}
+              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={(date) => setValue("date", date)}
+              disabled={(date) =>
+                date > new Date() || date < new Date("1900-01-01")
+              }
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+
+        {errors.date && (
+          <p className="text-sm text-red-500"> {errors.date.message}</p>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Description</label>
+        <Input placeholder="Enter Description" {...register("description")} />
+        {errors.description && (
+          <p className="text-sm text-red-500">{errors.description.message}</p>
+        )}
+      </div>
+
+      <div className="flex items-center justify-between rounded-lg border p-3 bg-white">
+        <div className="space-y-0.5">
+          <label
+            htmlFor="isDefault"
+            className="text-sm text-[#4CAF50] font-semibold cursor-pointer"
+          >
+            Recurring Transaction
+          </label>
+          <p className="text-sm text-muted-foreground">
+            Set up a recurring schedule for this transaction
+          </p>
+        </div>
+        <Switch
+          checked={isRecurring}
+          onCheckedChange={(checked) => setValue("isRecurring", checked)}
+        />
+      </div>
+
+      {isRecurring && (
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Recurring Interval</label>
+          <Select
+            onValueChange={(value) => setValue("recurringInterval", value)}
+            defaultValue={getValues("recurringInterval")}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Interval" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="DAILY">Daily</SelectItem>
+              <SelectItem value="WEEKLY">Weekly</SelectItem>
+              <SelectItem value="MONTHLY">Monthly</SelectItem>
+              <SelectItem value="YEARLY">Yearly</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {errors.recurringInterval && (
+            <p className="text-sm text-red-500">
+              {" "}
+              {errors.recurringInterval.message}
+            </p>
+          )}
+        </div>
+      )}
+
+      <div className="flex gap-4">
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full flex items-center justify-center space-x-2"
+          onClick={() => {
+            setIsNavigating(true);
+            router.back();
+          }}
+          disabled={isNavigating}
+        >
+          {isNavigating ? (
+            <>
+              <span>Loading...</span>
+              <Loader2Icon className="h-4 w-4 animate-spin" />
+            </>
+          ) : (
+            "Cancel"
+          )}
+        </Button>
+        <Button
+          type="submit"
+          className="w-full flex items-center justify-center space-x-2"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <span>Loading...</span>
+              <Loader2Icon className="h-4 w-4 animate-spin" />
+            </>
+          ) : (
+            "Create Transaction"
+          )}
+        </Button>
       </div>
     </form>
   );
