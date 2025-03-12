@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import RecieptScanner from "./reciept-scanner";
 
 const AddTrasactionForm = ({ accounts, categories }) => {
   const router = useRouter();
@@ -83,9 +84,15 @@ const AddTrasactionForm = ({ accounts, categories }) => {
   const filteredCategories = categories.filter(
     (category) => category.type === type
   );
+
+  const handleScanComplete = (scannedData) => {};
+
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       {/* AI Reciept Scanner  */}
+
+      <RecieptScanner onScanComplete={handleScanComplete} />
+
       <div className="space-y-2">
         <label className="text-sm font-medium"> Type</label>
         <Select

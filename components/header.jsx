@@ -14,7 +14,7 @@ const Header = () => {
 
   const handleNavigation = (type, href) => {
     setLoading((prev) => ({ ...prev, [type]: true }));
-    window.location.href = href;
+    window.location.href = href; // Navigate manually
   };
 
   return (
@@ -45,9 +45,7 @@ const Header = () => {
             <Button
               variant="outline"
               disabled={loading.transaction}
-              onClick={() =>
-                handleNavigation("transaction", "/transaction/create")
-              }
+              onClick={() => handleNavigation("transaction", "/transaction/create")}
               className="flex items-center gap-2"
             >
               {loading.transaction ? (
