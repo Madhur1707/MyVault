@@ -268,6 +268,20 @@ const AddTrasactionForm = ({ accounts, categories }) => {
 
       <div className="flex gap-4">
         <Button
+          type="submit"
+          className="w-full flex items-center justify-center space-x-2"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <span>Loading...</span>
+              <Loader2Icon className="h-4 w-4 animate-spin" />
+            </>
+          ) : (
+            "Create Transaction"
+          )}
+        </Button>
+        <Button
           type="button"
           variant="outline"
           className="w-full flex items-center justify-center space-x-2"
@@ -284,20 +298,6 @@ const AddTrasactionForm = ({ accounts, categories }) => {
             </>
           ) : (
             "Cancel"
-          )}
-        </Button>
-        <Button
-          type="submit"
-          className="w-full flex items-center justify-center space-x-2"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <>
-              <span>Loading...</span>
-              <Loader2Icon className="h-4 w-4 animate-spin" />
-            </>
-          ) : (
-            "Create Transaction"
           )}
         </Button>
       </div>
