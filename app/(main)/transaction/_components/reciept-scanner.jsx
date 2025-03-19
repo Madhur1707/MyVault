@@ -1,38 +1,38 @@
 "use client";
-import { scanReciept } from "@/action/transaction";
+import { useRef, useEffect } from "react";
+import { Camera, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import useFetch from "@/hooks/use-fetch";
-import { Camera, Loader2Icon } from "lucide-react";
-import { useEffect, useRef } from "react";
 import { toast } from "sonner";
+import useFetch from "@/hooks/use-fetch";
+import { scanReceipt } from "@/action/transaction";
 
-const RecieptScanner = ({ onScanComplete }) => {
-  const fileInputRef = useRef();
+export function ReceiptScanner({ onScanComplete }) {
+  const fileInputRef = useRef(null);
 
   const {
-    loading: scanRecieptLoading,
-    fn: scanRecieptFn,
+    loading: scanReceiptLoading,
+    fn: scanReceiptFn,
     data: scannedData,
-  } = useFetch(scanReciept);
+  } = useFetch(scanReceipt);
 
-  const handleRecieptScan = async (file) => {
+  const handleReceiptScan = async (file) => {
     if (file.size > 5 * 1024 * 1024) {
       toast.error("File size should be less than 5MB");
       return;
     }
 
-    await scanReciept(file);
+    await scanReceiptFn(file);
   };
 
   useEffect(() => {
-    if (scannedData && !scanRecieptLoading) {
+    if (scannedData && !scanReceiptLoading) {
       onScanComplete(scannedData);
-      toast.success("Reciept scanned successfully");
+      toast.success("Receipt scanned successfully");
     }
-  }, [scanRecieptLoading, scannedData]);
+  }, [scanReceiptLoading, scannedData]);
 
   return (
-    <div>
+    <div className="flex items-center gap-4">
       <input
         type="file"
         ref={fileInputRef}
@@ -41,7 +41,7 @@ const RecieptScanner = ({ onScanComplete }) => {
         capture="environment"
         onChange={(e) => {
           const file = e.target.files?.[0];
-          if (file) handleRecieptScan(file);
+          if (file) handleReceiptScan(file);
         }}
       />
       <Button
@@ -49,21 +49,20 @@ const RecieptScanner = ({ onScanComplete }) => {
         variant="outline"
         className="w-full h-10 bg-gradient-to-r from-blue-900 to-purple-900 text-white font-semibold hover:from-purple-800 hover:to-blue-800 hover:text-white transition-all duration-300 rounded-lg shadow-lg"
         onClick={() => fileInputRef.current?.click()}
-        disabled={scanRecieptLoading}
+        disabled={scanReceiptLoading}
       >
-        {scanRecieptLoading ? (
+        {scanReceiptLoading ? (
           <>
-            <Loader2Icon className="h-4 w-4 animate-spin" />
-            <span>Scanning Reciept...</span>
+            <Loader2 className="mr-2 animate-spin" />
+            <span>Scanning Receipt...</span>
           </>
         ) : (
           <>
-            <Camera className="mr-2" /> <span>Reciept with AI</span>
+            <Camera className="mr-2" />
+            <span>Scan Receipt with AI</span>
           </>
         )}
       </Button>
     </div>
   );
-};
-
-export default RecieptScanner;
+}

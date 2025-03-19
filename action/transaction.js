@@ -6,7 +6,7 @@ import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { revalidatePath } from "next/cache";
 
-const genAi = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const serializeAmount = (obj) => ({
   ...obj,
@@ -119,14 +119,14 @@ function calculateNextRecurringDate(startDate, interval) {
   return date;
 }
 
-export async function scanReciept(file) {
+
+export async function scanReceipt(file) {
   try {
-    const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // convert file to arrayBuffer
+    // Convert File to ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();
-
-    // convert ArrayBuffer to Base64
+    // Convert ArrayBuffer to Base64
     const base64String = Buffer.from(arrayBuffer).toString("base64");
 
     const prompt = `
@@ -155,13 +155,12 @@ export async function scanReciept(file) {
           data: base64String,
           mimeType: file.type,
         },
-        prompt,
       },
+      prompt,
     ]);
 
     const response = await result.response;
     const text = response.text();
-
     const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
 
     try {
@@ -174,11 +173,11 @@ export async function scanReciept(file) {
         merchantName: data.merchantName,
       };
     } catch (parseError) {
-      console.error("Error parsing JSON response", parseError);
-      throw new Error("Invalid response format from gemini");
+      console.error("Error parsing JSON response:", parseError);
+      throw new Error("Invalid response format from Gemini");
     }
   } catch (error) {
-    console.error("Error Scanning Reciept", error);
-    throw new Error("Failed to scan reciept");
+    console.error("Error scanning receipt:", error);
+    throw new Error("Failed to scan receipt");
   }
 }
