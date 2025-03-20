@@ -28,7 +28,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ReceiptScanner } from "./reciept-scanner";
 
-
 const AddTrasactionForm = ({ accounts, categories }) => {
   const router = useRouter();
   const [isNavigating, setIsNavigating] = useState(false);
@@ -87,7 +86,16 @@ const AddTrasactionForm = ({ accounts, categories }) => {
   );
 
   const handleScanComplete = (scannedData) => {
-  console.log(scannedData)
+    if (scannedData) {
+      setValue("amount", scannedData.amount.toString());
+      setValue("date", new Date(scannedData.date));
+      if (scannedData.description) {
+        setValue("description", scannedData.description);
+      }
+      if (scannedData.category) {
+        setValue("category", scannedData.category);
+      }
+    }
   };
 
   return (
