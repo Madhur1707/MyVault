@@ -60,7 +60,7 @@ const RECURRING_INTERVALS = {
   YEARLY: "Yearly",
 };
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 15;
 
 const TransactionTable = ({ transactions }) => {
   const router = useRouter();
