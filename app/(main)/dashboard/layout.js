@@ -13,11 +13,15 @@ const DashboardLayout = () => {
 
       <Suspense
         fallback={
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center w-full absolute top-30">
             <ClipLoader
               color="#12CAD6"
               size={50}
-              cssOverride={{ borderWidth: "6px" }}
+              speedMultiplier={1.5} // Adjust speed
+              cssOverride={{
+                borderWidth: "6px",
+                animation: "spin 1s linear infinite",
+              }}
             />
           </div>
         }

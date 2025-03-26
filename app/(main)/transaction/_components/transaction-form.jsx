@@ -106,11 +106,15 @@ const AddTrasactionForm = ({
 
   useEffect(() => {
     if (transactionResult?.success && !transactionLoading) {
-      toast.success("Transaction created successfully");
+      toast.success(
+        editMode
+          ? "Transaction Updated successfully"
+          : "Transaction Created successfully"
+      );
       reset();
       router.push(`/account/${transactionResult.data.accountId}`);
     }
-  }, [transactionResult, transactionLoading]);
+  }, [transactionResult, transactionLoading, editMode]);
 
   const filteredCategories = categories.filter(
     (category) => category.type === type
@@ -133,8 +137,7 @@ const AddTrasactionForm = ({
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       {/* AI Reciept Scanner  */}
 
-      <ReceiptScanner onScanComplete={handleScanComplete} />
-
+      {!editMode && <ReceiptScanner onScanComplete={handleScanComplete} />}
       <div className="space-y-2">
         <label className="text-sm font-medium"> Type</label>
         <Select
@@ -319,6 +322,8 @@ const AddTrasactionForm = ({
               <span>Loading...</span>
               <Loader2Icon className="h-4 w-4 animate-spin" />
             </>
+          ) : editMode ? (
+            "Update Transaction"
           ) : (
             "Create Transaction"
           )}

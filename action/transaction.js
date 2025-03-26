@@ -25,7 +25,7 @@ export async function createTransaction(data) {
 
     const decision = await aj.protect(req, {
       userId,
-      requested: 1, // Specify the number of tokens to consume
+      requested: 10, // Specify the number of tokens to consume
     });
 
     if (decision.isDenied()) {
@@ -273,7 +273,5 @@ export async function updateTransaction(id, data) {
     revalidatePath(`/account/${data.accountId}`);
 
     return { success: true, data: serializeAmount(transaction) };
-  } catch (error) {
-    throw new Error(error.message);
-  }
+  } catch (error) {}
 }
