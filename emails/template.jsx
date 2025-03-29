@@ -96,7 +96,7 @@ export default function EmailTemplate({
             {data?.insights && (
               <Section style={styles.section}>
                 <Heading style={styles.sectionHeading}>
-                  <span style={styles.aiIcon}>🤖</span> Wealth Insights
+                  <span style={styles.aiIcon}>🤖</span> MyVault Insights
                 </Heading>
                 <div style={styles.insightsContainer}>
                   {data.insights.map((insight, index) => (
