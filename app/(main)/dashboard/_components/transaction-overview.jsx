@@ -12,7 +12,25 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { useState } from "react";
+import {
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
 
+const COLORS = [
+    "#B22222",
+    "#008B8B",
+    "#1E90FF", 
+    "#2F4F4F", 
+    "#8B4513", 
+    "#4B0082", 
+    "#483D8B", 
+  ];
+  
 export function DashboardOverview({ accounts, transactions }) {
   const [selectedAccountId, setSelectedAccountId] = useState(
     accounts.find((a) => a.isDefault)?.id || accounts[0]?.id
@@ -27,6 +45,35 @@ export function DashboardOverview({ accounts, transactions }) {
   const recentTransactions = accountTransactions
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 5);
+
+  // Calculate expense breakdown for current month
+  const currentDate = new Date();
+  const currentMonthExpenses = accountTransactions.filter((t) => {
+    const transactionDate = new Date(t.date);
+    return (
+      t.type === "EXPENSE" &&
+      transactionDate.getMonth() === currentDate.getMonth() &&
+      transactionDate.getFullYear() === currentDate.getFullYear()
+    );
+  });
+
+  // Group expenses by category
+  const expensesByCategory = currentMonthExpenses.reduce((acc, transaction) => {
+    const category = transaction.category;
+    if (!acc[category]) {
+      acc[category] = 0;
+    }
+    acc[category] += transaction.amount;
+    return acc;
+  }, {});
+
+  // Format data for pie chart
+  const pieChartData = Object.entries(expensesByCategory).map(
+    ([category, amount]) => ({
+      name: category,
+      value: amount,
+    })
+  );
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
@@ -86,7 +133,7 @@ export function DashboardOverview({ accounts, transactions }) {
                         ) : (
                           <ArrowUp className="mr-1 h-4 w-4" />
                         )}
-                       ₹  {transaction.amount.toFixed(2)}
+                        ₹ {transaction.amount.toFixed(2)}
                       </div>
                     </div>
                   </div>
@@ -96,10 +143,54 @@ export function DashboardOverview({ accounts, transactions }) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Expense Breakdown Card */}
+
       <Card>
         <CardHeader>
-          <CardTitle>Transaction Overview</CardTitle>
+          <CardTitle className="text-xl font-semibold text-blue-700">
+            Monthly Expense Breakdown
+          </CardTitle>
         </CardHeader>
+        <CardContent className="p-0 pb-5">
+          {pieChartData.length === 0 ? (
+            <p className="text-center text-muted-foreground py-4">
+              No expenses this month
+            </p>
+          ) : (
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieChartData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, value }) => `${name}: ₹${value.toFixed(2)}`}
+                  >
+                    {pieChartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value) => `₹${value.toFixed(2)}`}
+                    contentStyle={{
+                      backgroundColor: "hsl(var(--popover))",
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: "var(--radius)",
+                    }}
+                  />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </CardContent>
       </Card>
     </div>
   );
