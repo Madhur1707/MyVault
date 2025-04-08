@@ -56,18 +56,6 @@ MyVault is an intelligent financial dashboard where users can:
 
 ---
 
-# Clone the repository
-git clone https://github.com/yourusername/myvault.git
-cd myvault
-
-# Install dependencies
-npm install
-
-# Set up environment variables (check .env.example)
-
-# Run the development server
-npm run dev
-
 🤝 Contributing
 Got ideas or improvements? Feel free to fork this repo and make a pull request!
 
