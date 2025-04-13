@@ -10,11 +10,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import useFetch from "@/hooks/use-fetch";
-import {
-  ArrowDown,
-  ArrowUp,
-  Loader2Icon,
-} from "lucide-react";
+import { ArrowDown, ArrowUp, Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
