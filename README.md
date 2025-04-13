@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🔐 MyVault – Full Stack AI Finance Platform
 
-## Getting Started
+**MyVault** is a cutting-edge, full-stack finance management platform powered by AI. Built with modern technologies like **Next.js**, **Supabase**, **Tailwind CSS**, **Prisma**, **Inngest**, **ArcJet**, and **Shadcn UI**, this app helps users take control of their finances with smart features like AI-powered receipt parsing, transaction tracking, and secure storage.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 💡 What is MyVault?
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+MyVault is an intelligent financial dashboard where users can:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- 🧾 Upload receipts and auto-fill data using AI (powered by Gemini)
+- 💰 Add and manage transactions
+- 📊 Visualize their financial health
+- 🔐 Enjoy secure authentication and real-time updates
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🚀 Features
 
-To learn more about Next.js, take a look at the following resources:
+### 📂 Transaction Management
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Add, edit, and delete transactions
+- Organize by category, amount, date, and payment mode
+- Track income vs. expenses over time
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🤖 AI-Powered Receipt Scanner
 
-## Deploy on Vercel
+- Upload receipts (PDF, image, or screenshot)
+- Gemini AI auto-extracts and fills transaction details
+- Review and approve before saving
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🔐 Secure User Authentication
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Clerk-style auth flow integrated
+- Role-based access and session handling
+- Built on Supabase Auth with fine-grained controls
+
+### 📈 Finance Dashboard
+
+- Real-time visualizations of your transactions
+- Monthly summaries, category breakdowns, and spending trends
+- In-app notifications and insights
+
+---
+
+## 🛠 Tech Stack
+
+| Layer            | Technology                                              |
+|------------------|----------------------------------------------------------|
+| **Frontend**      | [Next.js](https://nextjs.org), [React](https://reactjs.org), [TailwindCSS](https://tailwindcss.com), [Shadcn UI](https://ui.shadcn.com) |
+| **Backend**       | [Supabase](https://supabase.io) (Database + Auth), [Prisma](https://www.prisma.io) ORM |
+| **Authentication**| Clerk-like system for secure auth flow |
+| **AI Services**   | [Gemini](https://deepmind.google/technologies/gemini/) for intelligent receipt processing |
+| **Background Jobs** | [Inngest](https://www.inngest.com) for background and async workflows |
+| **Security**      | [ArcJet](https://arcjet.com) for observability and request protection |
+
+---
+
+🤝 Contributing
+Got ideas or improvements? Feel free to fork this repo and make a pull request!
+
+
+
